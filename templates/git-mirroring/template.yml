@@ -1,0 +1,117 @@
+spec:
+  inputs:
+    stage:
+      default: test
+    hidden_job_suffix:
+      default: ''
+---
+.git-mirror$[[ inputs.hidden_job_suffix ]]:
+  image: bitnami/git
+  stage: $[[ inputs.stage ]]
+  variables:
+    #SOURCE_REPO_URL:
+    #TARGET_REPO_URL:
+    #USERNAME:
+    SOURCE_USERNAME: $USERNAME
+    TARGET_USERNAME: $USERNAME
+    SOURCE_HTTP_USERNAME: $SOURCE_USERNAME
+    TARGET_HTTP_USERNAME: $TARGET_USERNAME
+    SOURCE_SSH_USERNAME: $SOURCE_USERNAME
+    TARGET_SSH_USERNAME: $TARGET_USERNAME
+    #SOURCE_PASSWORD:
+    #TARGET_PASSWORD:
+    SOURCE_HTTP_PASSWORD: $SOURCE_PASSWORD
+    TARGET_HTTP_PASSWORD: $TARGET_PASSWORD
+    #SSH_KEY_FILE:
+    SOURCE_SSH_KEY_FILE: $SSH_KEY_FILE
+    TARGET_SSH_KEY_FILE: $SSH_KEY_FILE
+
+  before_script:
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - !reference [.git-mirroring.yml:configure_git_function$[[ inputs.hidden_job_suffix ]]]
+    - !reference [.git-mirroring.yml:before_script_extra]
+  script:
+    - __configure_git $SOURCE_REPO_URL "SOURCE"
+    - git clone --mirror $SOURCE_REPO_URL source_repo.git
+    - cd source_repo.git
+    - __configure_git $TARGET_REPO_URL "TARGET"
+    - git remote add target $TARGET_REPO_URL
+    -|
+      if [[ $MIRROR_STRATEGY == "push" ]]; then
+        local force_push=$( [[ $FORCE_PUSH == "true" ]] && echo "--force" )
+        local push_refs=$PUSH_REFS
+        git push target $push_refs $force_push $( [[ $push_tags == "true" ]] && echo "--tags" ) $( [[ $force_push_tags == "true" ]] && echo "--force" )
+      else
+        git push --mirror target
+      fi
+
+.git-mirroring:configure_git$[[ inputs.hidden_job_suffix ]]:
+  - !reference [.git-mirroring:configure_git_function]
+  - __configure_git $SOURCE_REPO_URL SOURCE
+  - __configure_git $TARGET_REPO_URL TARGET
+
+.git-mirroring:configure_git_function$[[ inputs.hidden_job_suffix ]]:
+  - |
+    function __configure_git() {
+      local repo_url=$1
+      local prefix=$2
+      local protocol=$(echo $repo_url | cut -d: -f1)
+      if [[ $protocol == http* ]]; then
+        local username
+        local password
+        if [[ $prefix == SOURCE ]]; then
+          username=$SOURCE_HTTP_USERNAME
+          password=$SOURCE_HTTP_PASSWORD
+        elif [[ $prefix == TARGET ]]; then
+          username=$TARGET_HTTP_USERNAME
+          password=$TARGET_HTTP_PASSWORD
+        fi
+        if [[ -n $password ]]; then
+          local credentials_url=$(echo $repo_url | sed -e "s|://|://$username:$password@|")
+          echo $credentials_url >> ~/.git-credentials
+          password="[masked]"
+          echo "echo $credentials_url >> ~/.git-credentials"
+          echo git config --global credential.helper store
+          git config --global credential.helper store
+        elif [[ $prefix == "TARGET" ]]; then
+          echo "Warning: No TARGET password provided. Set the TARGET_HTTP_PASSWORD environment variable to provide it."
+        fi
+      fi
+      if [[ $protocol == git* || $protocol == ssh* ]]; then
+        local ssh_key_file
+        local ssh_known_hosts_file
+        if [[ $prefix == SOURCE ]]; then
+          ssh_key_file=$SOURCE_SSH_KEY_FILE
+          ssh_known_hosts_file=$SOURCE_SSH_KNOWN_HOSTS_FILE
+        elif [[ $prefix == TARGET ]]; then
+          ssh_key_file=$TARGET_SSH_KEY_FILE
+          ssh_known_hosts_file=$TARGET_SSH_KNOWN_HOSTS_FILE
+        fi
+        if [[ -n $ssh_key_file ]]; then
+          if [[ -f $ssh_key_file ]]; then
+            echo ssh-add $ssh_key_file
+            ssh-add $ssh_key_file
+          else
+            echo "Warning: SSH key file $ssh_key_file does not exist."
+          fi
+        elif [[ $prefix == "TARGET" ]]; then
+          echo "Warning: No TARGET SSH key file provided. Set the GIT_TARGET_SSH_KEY environment variable to provide it."
+        fi
+        if [[ -n $ssh_known_hosts_file ]]; then
+          if [[ -f $ssh_known_hosts_file ]]; then
+            echo cp $ssh_known_hosts_file ~/.ssh/known_hosts
+            cp $ssh_known_hosts_file ~/.ssh/known_hosts
+          else
+            echo "Warning: SSH known hosts file $ssh_known_hosts_file does not exist."
+          fi
+        else
+          echo "Warning: No ~/.ssh/known_hosts provided. Set the ${prefix}_SSH_KNOWN_HOSTS_FILE environment variable to provide it."
+          echo 'echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+          echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+        fi
+      fi
+    }
+
+.git-mirroring.yml:before_script_extra$[[ inputs.hidden_job_suffix ]]:
+  - echo "" # Override if necessary to add additional before_script steps

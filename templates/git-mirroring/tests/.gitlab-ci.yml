@@ -1,0 +1,24 @@
+include:
+  # include the component located in the current project from the current SHA
+  - component: $CI_SERVER_FQDN/$CI_PROJECT_PATH/git-mirroring@$CI_COMMIT_SHA
+
+.clone-repo:
+  image: bitnami/git
+  variables:
+    GIT_STRATEGY: none
+  before_script:
+    - !reference[.git-mirroring:configure_git]
+    - git clone $REPO_URL
+
+# Common test tasks
+.snippets:
+  configure git commit user:
+    - git config user.name "$GITLAB_USER_NAME"
+    - git config user.email "$GITLAB_USER_EMAIL"
+
+  create a commit:
+    - touch test.txt
+    - echo "Adding content for a commit $(date)" >> test.txt
+    - git add test.txt
+    - git commit -m "Adding commit for a test"
+
