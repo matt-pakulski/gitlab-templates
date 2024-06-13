@@ -6,13 +6,14 @@ include:
   image: bitnami/git
   variables:
     GIT_STRATEGY: none
+    SOURCE_REPO_URL: $REPO_URL
   before_script:
-    - !reference [.snippets, print env variables]
-    - !reference [.git-mirroring:configure_git]
+    - !reference [.git-mirroring:tests:snippets, print env variables]
+    - !reference [.git-mirroring:snippets, configure_git:source]
     - git clone $REPO_URL
 
 # Common test tasks
-.snippets:
+.git-mirroring:tests:snippets:
   configure git commit user:
     - git config user.name "$GITLAB_USER_NAME"
     - git config user.email "$GITLAB_USER_EMAIL"
@@ -23,6 +24,7 @@ include:
     - git add test.txt
     - git commit -m "Adding commit for a test"
 
+  # If the DEBUG environment variable is set, print the sorted environment variables
   print env variables:
-    - env | sort -t '=' -k 1,1
+    - "[[ -n $DEBUG ]] && env | sort -t '=' -k 1,1"
 

@@ -4,10 +4,9 @@
 # Job 'test' performs the clone from the source repo to the target repo
 # Job 'verify' verifies that the commit that was added to the source repo is present in the target repo
 
-.default_variables: &default_variables
+.default_variables:gitlab-https-to-gitlab-https: &default_variables
   SOURCE_REPO_URL: https://$CI_SERVER_FQDN/$CI_PROJECT_NAMESPACE/gitlab-clone-testing/mirror-from-gitlab-https-to-gitlab-https/source.git
   TARGET_REPO_URL: https://$CI_SERVER_FQDN/$CI_PROJECT_NAMESPACE/gitlab-clone-testing/mirror-from-gitlab-https-to-gitlab-https/target.git
-  DEBUG: true
 
 
 push-commit:gitlab-https-to-gitlab-https:
@@ -22,8 +21,8 @@ push-commit:gitlab-https-to-gitlab-https:
   
   script:
     - cd source
-    - !reference [.snippets, configure git commit user]
-    - !reference [.snippets, create a commit]
+    - !reference [.git-mirroring:tests:snippets, configure git commit user]
+    - !reference [.git-mirroring:tests:snippets, create a commit]
     - git push
     - echo "COMMIT_HASH=$(git rev-parse HEAD)" > ${CI_PROJECT_DIR}/.env
   
@@ -31,7 +30,7 @@ push-commit:gitlab-https-to-gitlab-https:
     reports:
       dotenv: .env
 
-
+# Perform test; mirror 
 test:gitlab-https-to-gitlab-https:
   extends: .git-mirror
   stage: test
@@ -39,7 +38,6 @@ test:gitlab-https-to-gitlab-https:
   variables:
     <<: *default_variables
     TARGET_HTTP_PASSWORD: $GITLAB_TARGET_REPO_TOKEN # defined in gitlab ui
-    DEBUG: true
 
 
 verify:gitlab-https-to-gitlab-https:
