@@ -37,7 +37,7 @@ spec:
     - cd source_repo.git
     - __configure_git $TARGET_REPO_URL "TARGET"
     - git remote add target $TARGET_REPO_URL
-    -|
+    - |
       if [[ $MIRROR_STRATEGY == "push" ]]; then
         local force_push=$( [[ $FORCE_PUSH == "true" ]] && echo "--force" )
         local push_refs=$PUSH_REFS
