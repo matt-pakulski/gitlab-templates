@@ -25,7 +25,7 @@ push-commit:gitlab-https-to-gitlab-https:
     - !reference [.snippets, configure git commit user]
     - !reference [.snippets, create a commit]
     - git push
-    - echo "COMMIT_HASH=$(git rev-parse HEAD)" > ${CI_PROJECT_DIR}/.env"
+    - echo "COMMIT_HASH=$(git rev-parse HEAD)" > ${CI_PROJECT_DIR}/.env
   
   artifacts:
     reports:
