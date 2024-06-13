@@ -15,7 +15,7 @@ push-commit:gitlab-https-to-gitlab-https:
   stage: build
 
   variables:
-    *default_variables
+    <<: *default_variables
     REPO_URL: $SOURCE_REPO_URL
   
   script:
@@ -34,7 +34,7 @@ test:gitlab-https-to-gitlab-https:
   stage: test
 
   variables:
-    *default_variables
+    <<: *default_variables
 
 verify:gitlab-https-to-gitlab-https:
   extends: .clone-repo
@@ -43,7 +43,7 @@ verify:gitlab-https-to-gitlab-https:
     - test:gitlab-https-to-gitlab-https
 
   variables:
-    *default_variables
+    <<: *default_variables
     REPO_URL: $TARGET_REPO_URL
 
   script:
