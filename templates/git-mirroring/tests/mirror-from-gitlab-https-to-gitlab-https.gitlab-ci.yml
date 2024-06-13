@@ -17,6 +17,7 @@ push-commit:gitlab-https-to-gitlab-https:
   variables:
     <<: *default_variables
     REPO_URL: $SOURCE_REPO_URL
+    SOURCE_HTTP_USERNAME: git
     SOURCE_HTTP_PASSWORD: $GITLAB_TARGET_REPO_TOKEN # defined in gitlab ui
   
   script:
