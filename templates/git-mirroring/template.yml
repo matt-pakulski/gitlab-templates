@@ -54,6 +54,7 @@ spec:
 .git-mirroring:configure_git_function$[[ inputs.hidden_job_suffix ]]:
   - |
     function __configure_git() {
+      [[ -n $DEBUG ]] && set -x;
       local repo_url=$1
       local prefix=$2
       local protocol=$(echo $repo_url | cut -d: -f1)
@@ -111,6 +112,7 @@ spec:
           echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
         fi
       fi
+      [[ -n $DEBUG ]] && set +x;
     }
 
 .git-mirroring:before_script_extra$[[ inputs.hidden_job_suffix ]]:
