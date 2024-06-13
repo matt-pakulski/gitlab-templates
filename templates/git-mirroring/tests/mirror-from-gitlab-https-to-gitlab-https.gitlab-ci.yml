@@ -48,9 +48,9 @@ verify:gitlab-https-to-gitlab-https:
 
   script:
     - |
-    if [ "$COMMIT_HASH" != "$(git rev-parse HEAD)" ]; then
-      echo "Commit hashes do not match!"
-      exit 1
-    else
-      echo "Commit hashes match. Repository has been mirrored from source to target."
-    fi
+      if [ "$COMMIT_HASH" != "$(git rev-parse HEAD)" ]; then
+        echo "Commit hashes do not match!"
+        exit 1
+      else
+        echo "Commit hashes match. Repository has been mirrored from source to target."
+      fi
