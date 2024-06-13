@@ -27,7 +27,7 @@ spec:
     TARGET_SSH_KEY_FILE: $SSH_KEY_FILE
 
   before_script:
-    - !reference [.git-mirroring:configure_git_function]
+    - !reference [.git-mirroring:snippets, configure_git_function]
     - !reference [.git-mirroring:before_script_extra]
   script:
     - !reference [.git-mirroring:snippets, configure_git:source]
