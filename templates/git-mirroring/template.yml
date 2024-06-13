@@ -74,7 +74,7 @@ spec:
   create_configure_git_function:
     - |
       function __configure_git() {
-        [[ -n $DEBUG ]] && set -x;
+        [[ -n $DEBUG ]] && set -x
         local repo_url=$1
         local prefix=$2
         local protocol=$(echo $repo_url | cut -d: -f1)
@@ -99,7 +99,6 @@ spec:
             echo "Warning: No TARGET password provided. Set the TARGET_HTTP_PASSWORD environment variable to provide it."
           fi
         fi
-        echo here0
         if [[ $protocol == git* || $protocol == ssh* ]]; then
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
@@ -135,7 +134,7 @@ spec:
             echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
           fi
         fi
-        echo here1
-        [[ -n $DEBUG ]] && set +x;
-        echo here2
+
+        [[ -n $DEBUG ]] && set +x
+
       }
