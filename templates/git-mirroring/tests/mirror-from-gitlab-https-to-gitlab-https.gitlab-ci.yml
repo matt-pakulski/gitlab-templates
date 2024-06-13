@@ -39,6 +39,8 @@ test:gitlab-https-to-gitlab-https:
   variables:
     <<: *default_variables
     TARGET_HTTP_PASSWORD: $GITLAB_TARGET_REPO_TOKEN # defined in gitlab ui
+    DEBUG: true
+
 
 verify:gitlab-https-to-gitlab-https:
   extends: .clone-repo
