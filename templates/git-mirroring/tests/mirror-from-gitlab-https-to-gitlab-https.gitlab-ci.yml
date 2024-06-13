@@ -46,6 +46,7 @@ verify:gitlab-https-to-gitlab-https:
   extends: .clone-repo
   stage: test
   needs: 
+    - push-commit:gitlab-https-to-gitlab-https
     - test:gitlab-https-to-gitlab-https
 
   variables:
