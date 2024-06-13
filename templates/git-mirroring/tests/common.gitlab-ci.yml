@@ -13,7 +13,8 @@ include:
   before_script:
     - !reference [.git-mirroring:tests:snippets, print env variables]
     - !reference [.git-mirroring:snippets, configure_git:source]
-    - !reference [.git-mirroring:snippets, clone_source]
+    - git clone $SOURCE_REPO_URL source_repo.git
+    - cd source_repo.git
 
 
 # Common test step snippets
