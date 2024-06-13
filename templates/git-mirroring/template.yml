@@ -99,6 +99,7 @@ spec:
             echo "Warning: No TARGET password provided. Set the TARGET_HTTP_PASSWORD environment variable to provide it."
           fi
         fi
+        echo here0
         if [[ $protocol == git* || $protocol == ssh* ]]; then
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
@@ -134,5 +135,7 @@ spec:
             echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
           fi
         fi
+        echo here1
         [[ -n $DEBUG ]] && set +x;
+        echo here2
       }
