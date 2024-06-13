@@ -19,6 +19,7 @@ push-commit:gitlab-https-to-gitlab-https:
     REPO_URL: $SOURCE_REPO_URL
   
   script:
+    - cd source
     - !reference [.snippets, configure git commit user]
     - !reference [.snippets, create a commit]
     - git push
@@ -47,6 +48,7 @@ verify:gitlab-https-to-gitlab-https:
     REPO_URL: $TARGET_REPO_URL
 
   script:
+    - cd target
     - |
       if [ "$COMMIT_HASH" != "$(git rev-parse HEAD)" ]; then
         echo "Commit hashes do not match!"
