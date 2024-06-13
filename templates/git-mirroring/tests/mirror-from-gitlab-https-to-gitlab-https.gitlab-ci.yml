@@ -7,7 +7,6 @@
 .default_variables: &default_variables
   SOURCE_REPO_URL: https://$CI_SERVER_FQDN/$CI_PROJECT_NAMESPACE/gitlab-clone-testing/mirror-from-gitlab-https-to-gitlab-https/source.git
   TARGET_REPO_URL: https://$CI_SERVER_FQDN/$CI_PROJECT_NAMESPACE/gitlab-clone-testing/mirror-from-gitlab-https-to-gitlab-https/target.git
-  TARGET_HTTP_PASSWORD: $GITLAB_TARGET_REPO_TOKEN # defined in gitlab ui
   DEBUG: true
 
 
@@ -38,6 +37,7 @@ test:gitlab-https-to-gitlab-https:
 
   variables:
     <<: *default_variables
+    TARGET_HTTP_PASSWORD: $GITLAB_TARGET_REPO_TOKEN # defined in gitlab ui
 
 verify:gitlab-https-to-gitlab-https:
   extends: .clone-repo

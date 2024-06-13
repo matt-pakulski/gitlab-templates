@@ -7,6 +7,7 @@ include:
   variables:
     GIT_STRATEGY: none
   before_script:
+    - !reference [.snippets, print env variables]
     - !reference [.git-mirroring:configure_git]
     - git clone $REPO_URL
 
@@ -21,4 +22,7 @@ include:
     - echo "Adding content for a commit $(date)" >> test.txt
     - git add test.txt
     - git commit -m "Adding commit for a test"
+
+  print env variables:
+    - env | sort -t '=' -k 1,1
 
