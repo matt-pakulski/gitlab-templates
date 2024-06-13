@@ -53,13 +53,13 @@ spec:
 
   mirror_to_target:
     - |
-    if [[ $MIRROR_STRATEGY == "push" ]]; then
-      local force_push=$( [[ $FORCE_PUSH == "true" ]] && echo "--force" )
-      local push_refs=$PUSH_REFS
-      git push target $push_refs $force_push $( [[ $push_tags == "true" ]] && echo "--tags" ) $( [[ $force_push_tags == "true" ]] && echo "--force" )
-    else
-      git push --mirror target
-    fi
+      if [[ $MIRROR_STRATEGY == "push" ]]; then
+        local force_push=$( [[ $FORCE_PUSH == "true" ]] && echo "--force" )
+        local push_refs=$PUSH_REFS
+        git push target $push_refs $force_push $( [[ $push_tags == "true" ]] && echo "--tags" ) $( [[ $force_push_tags == "true" ]] && echo "--force" )
+      else
+        git push --mirror target
+      fi
 
   configure_git:source:
     - __configure_git $SOURCE_REPO_URL SOURCE
