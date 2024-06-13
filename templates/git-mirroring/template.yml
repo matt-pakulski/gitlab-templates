@@ -1,7 +1,7 @@
 spec:
   inputs:
     stage:
-      default: test
+      default: deploy
     hidden_job_suffix:
       default: ''
 ---

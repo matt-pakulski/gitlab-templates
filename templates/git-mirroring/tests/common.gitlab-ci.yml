@@ -2,18 +2,22 @@ include:
   # include the component located in the current project from the current SHA
   - component: $CI_SERVER_FQDN/$CI_PROJECT_PATH/git-mirroring@$CI_COMMIT_SHA
 
+
 .clone-repo:
   image: bitnami/git
+
   variables:
     GIT_STRATEGY: none
     SOURCE_REPO_URL: $REPO_URL
+
   before_script:
     - !reference [.git-mirroring:tests:snippets, print env variables]
     - !reference [.git-mirroring:snippets, create_configure_git_function]
     - !reference [.git-mirroring:snippets, configure_git:source]
     - git clone $REPO_URL
 
-# Common test tasks
+
+# Common test step snippets
 .git-mirroring:tests:snippets:
   configure git commit user:
     - git config user.name "$GITLAB_USER_NAME"

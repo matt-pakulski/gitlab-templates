@@ -18,12 +18,12 @@ Read more [here](../templates/git-mirroring/README.md)
 
 ```yaml
 include:
-  - component: $CI_SERVER_FQDN/matt-pakulski/gitlab-templates/git-mirroring/template@latest
+  - component: $CI_SERVER_FQDN/matt-pakulski/gitlab-templates/git-mirroring@latest
 
 my-mirroring-job:
   extends: .git-mirroring
   variables:
     SOURCE_REPO_URL: https://gitlab.com/gitlab-org/gitlab
     TARGET_REPO_URL: https://gitlab.com/example/gitlab-fork
-    TARGET_PASSWORD: $REPO_EXAMPLE_TOKEN # defined in GitLab UI CI/CD variables
+    TARGET_PASSWORD: $TARGET_REPO_TOKEN # defined in GitLab UI CI/CD variables
 ```
