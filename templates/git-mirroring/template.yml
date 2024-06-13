@@ -113,5 +113,5 @@ spec:
       fi
     }
 
-.git-mirroring.yml:before_script_extra$[[ inputs.hidden_job_suffix ]]:
+.git-mirroring:before_script_extra$[[ inputs.hidden_job_suffix ]]:
   - echo "" # Override if necessary to add additional before_script steps
