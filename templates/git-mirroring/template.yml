@@ -26,30 +26,35 @@ spec:
     SOURCE_SSH_KEY_FILE: $SSH_KEY_FILE
     TARGET_SSH_KEY_FILE: $SSH_KEY_FILE
 
-  before_script:
-    - !reference [.git-mirroring:snippets, create_configure_git_function]
-    - !reference [.git-mirroring:before_script_extra]
   script:
     - !reference [.git-mirroring:snippets, configure_git:source]
     - !reference [.git-mirroring:snippets, clone_source]
     - !reference [.git-mirroring:snippets, configure_git:target]
     - !reference [.git-mirroring:snippets, mirror_to_target]
 
-# Override if necessary to add additional before_script steps
-.git-mirroring:before_script_extra:
-  - echo "" 
 
-# Various script snippets that may be called individually, or overridden
+# Various script snippets that may be called or overridden individually
 .git-mirroring:snippets:
+  
+  configure_git:
+    - !reference [.git-mirroring:snippets, configure_git:source]
+    - !reference [.git-mirroring:snippets, configure_git:target]
+
+  configure_git:source:
+    - !reference [.git-mirroring:snippets, create_configure_git_function]
+    - __configure_git $SOURCE_REPO_URL SOURCE
+
+  configure_git:target:
+    - !reference [.git-mirroring:snippets, create_configure_git_function]
+    - __configure_git $TARGET_REPO_URL TARGET
+    - !reference [.git-mirroring:snippets, configure_git:target_remote]
+
+  configure_git:target_remote:
+    - git remote add target $TARGET_REPO_URL
 
   clone_source:
     - git clone --mirror $SOURCE_REPO_URL source_repo.git
     - cd source_repo.git
-  
-  configure_git:
-    - !reference [.git-mirroring:snippets, create_configure_git_function]
-    - !reference [.git-mirroring:snippets, configure_git:source]
-    - !reference [.git-mirroring:snippets, configure_git:target]
 
   mirror_to_target:
     - |
@@ -61,16 +66,6 @@ spec:
         git push --mirror target
       fi
 
-  configure_git:source:
-    - __configure_git $SOURCE_REPO_URL SOURCE
-
-  configure_git:target:
-    - __configure_git $TARGET_REPO_URL TARGET
-    - !reference [.git-mirroring:snippets, configure_git:target_remote]
-
-  configure_git:target_remote:
-    - git remote add target $TARGET_REPO_URL
-  
   create_configure_git_function:
     - |
       function __configure_git() {

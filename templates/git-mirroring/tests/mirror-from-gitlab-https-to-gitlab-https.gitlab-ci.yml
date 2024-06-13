@@ -20,7 +20,6 @@ push-commit:gitlab-https-to-gitlab-https:
     SOURCE_HTTP_PASSWORD: $GITLAB_TARGET_REPO_TOKEN # defined in gitlab ui
   
   script:
-    - cd source
     - !reference [.git-mirroring:tests:snippets, configure git commit user]
     - !reference [.git-mirroring:tests:snippets, create a commit]
     - git push
@@ -53,7 +52,6 @@ verify:gitlab-https-to-gitlab-https:
     REPO_URL: $TARGET_REPO_URL
 
   script:
-    - cd target
     - |
       if [ "$COMMIT_HASH" != "$(git rev-parse HEAD)" ]; then
         echo "Commit hashes do not match!"
