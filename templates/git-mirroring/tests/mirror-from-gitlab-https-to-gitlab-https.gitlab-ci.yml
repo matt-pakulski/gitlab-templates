@@ -7,7 +7,7 @@
 .default_variables: &default_variables
   SOURCE_REPO_URL: https://$CI_SERVER_FQDN/$CI_PROJECT_NAMESPACE/gitlab-clone-testing/mirror-from-gitlab-https-to-gitlab-https/source.git
   TARGET_REPO_URL: https://$CI_SERVER_FQDN/$CI_PROJECT_NAMESPACE/gitlab-clone-testing/mirror-from-gitlab-https-to-gitlab-https/target.git
-  TARGET_PASSWORD: $GITLAB_TARGET_REPO_TOKEN # defined in gitlab ui
+  TARGET_HTTP_PASSWORD: $GITLAB_TARGET_REPO_TOKEN # defined in gitlab ui
 
 
 push-commit:gitlab-https-to-gitlab-https:
@@ -17,7 +17,7 @@ push-commit:gitlab-https-to-gitlab-https:
   variables:
     <<: *default_variables
     REPO_URL: $SOURCE_REPO_URL
-    SOURCE_PASSWORD: $GITLAB_TARGET_REPO_TOKEN # defined in gitlab ui
+    SOURCE_HTTP_PASSWORD: $GITLAB_TARGET_REPO_TOKEN # defined in gitlab ui
   
   script:
     - cd source
