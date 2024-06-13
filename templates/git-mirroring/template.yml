@@ -29,8 +29,8 @@ spec:
   before_script:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - !reference [.git-mirroring.yml:configure_git_function$[[ inputs.hidden_job_suffix ]]]
-    - !reference [.git-mirroring.yml:before_script_extra]
+    - !reference [.git-mirroring:configure_git_function]
+    - !reference [.git-mirroring:before_script_extra]
   script:
     - __configure_git $SOURCE_REPO_URL "SOURCE"
     - git clone --mirror $SOURCE_REPO_URL source_repo.git
