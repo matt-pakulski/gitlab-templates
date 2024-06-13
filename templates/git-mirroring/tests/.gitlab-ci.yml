@@ -7,7 +7,7 @@ include:
   variables:
     GIT_STRATEGY: none
   before_script:
-    - !reference[.git-mirroring:configure_git]
+    - !reference [.git-mirroring:configure_git]
     - git clone $REPO_URL
 
 # Common test tasks
