@@ -1,8 +1,9 @@
 # Tests mirroring from one gitlab repo to another gitlab repo using https
 #
-# Job 'push-commit' clones the source repo, creates a commit to it, and pushes the repo
-# Job 'test' performs the clone from the source repo to the target repo
-# Job 'verify' verifies that the commit that was added to the source repo is present in the target repo
+# Job 'push-commit:gitlab-https-to-gitlab-https' clones the source repo, creates a commit to it, and pushes the repo
+# Job 'gitlab-https-to-gitlab-https' performs the clone from the source repo to the target repo (located in examples/ directory)
+# Job 'verify:gitlab-https-to-gitlab-https' verifies that the commit that was added to the source repo is present in the target repo
+
 
 .default_variables:gitlab-https-to-gitlab-https: &default_variables
   SOURCE_REPO_URL: https://$CI_SERVER_FQDN/$CI_PROJECT_NAMESPACE/gitlab-clone-testing/mirror-from-gitlab-https-to-gitlab-https/source.git
@@ -15,11 +16,12 @@ push-commit:gitlab-https-to-gitlab-https:
 
   variables:
     <<: *default_variables
-    REPO_URL: $SOURCE_REPO_URL
+    CLONE_REPO_URL: $SOURCE_REPO_URL
     SOURCE_HTTP_USERNAME: git
     SOURCE_HTTP_PASSWORD: $GITLAB_TARGET_REPO_TOKEN # defined in gitlab ui
   
   script:
+    - cd cloned_repo.git
     - !reference [.git-mirroring:tests:snippets, configure git commit user]
     - !reference [.git-mirroring:tests:snippets, create a commit]
     - git push
@@ -30,28 +32,19 @@ push-commit:gitlab-https-to-gitlab-https:
       dotenv: .env
 
 
-# Perform test; mirror 
-test:gitlab-https-to-gitlab-https:
-  extends: .git-mirror
-  stage: test
-
-  variables:
-    <<: *default_variables
-    TARGET_HTTP_PASSWORD: $GITLAB_TARGET_REPO_TOKEN # defined in gitlab ui
-
-
 verify:gitlab-https-to-gitlab-https:
   extends: .clone-repo
   stage: test
   needs: 
     - push-commit:gitlab-https-to-gitlab-https
-    - test:gitlab-https-to-gitlab-https
+    - gitlab-https-to-gitlab-https
 
   variables:
     <<: *default_variables
-    REPO_URL: $TARGET_REPO_URL
+    CLONE_REPO_URL: $TARGET_REPO_URL
 
   script:
+    - cd cloned_repo.git
     - |
       if [ "$COMMIT_HASH" != "$(git rev-parse HEAD)" ]; then
         echo "Commit hashes do not match!"

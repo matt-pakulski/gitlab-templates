@@ -8,13 +8,15 @@ include:
 
   variables:
     GIT_STRATEGY: none
-    SOURCE_REPO_URL: $REPO_URL
+    SOURCE_REPO_URL: $CI_REPOSITORY_URL
+    TARGET_REPO_URL: https://github.com/matt-pakulski/gitlab-templates.git
+
+    SOURCE_REPO_URL: $CLONE_REPO_URL
 
   before_script:
     - !reference [.git-mirroring:tests:snippets, print env variables]
     - !reference [.git-mirroring:snippets, configure_git:source]
-    - git clone $SOURCE_REPO_URL source_repo.git
-    - cd source_repo.git
+    - git clone $CLONE_REPO_URL cloned_repo.git
 
 
 # Common test step snippets
@@ -32,4 +34,3 @@ include:
   # If the DEBUG environment variable is set, print the sorted environment variables
   print env variables:
     - "[[ -n $DEBUG ]] && env | sort -t '=' -k 1,1"
-

@@ -1,0 +1,26 @@
+# Tests mirroring from this gitlab repo to a github repo using https
+#
+# Job 'current-repo-to-github' performs the clone from the source repo to the target repo (located in examples/ directory)
+# Job 'verify:current-repo-to-github' verifies that the commit that was added to the source repo is present in the target repo
+
+verify:current-repo-to-github:
+  extends: .clone-repo
+  stage: test
+  needs: 
+    - current-repo-to-github
+
+  variables:
+    CLONE_REPO_URL: https://github.com/matt-pakulski/gitlab-templates.git
+
+  script:
+    - cd cloned_repo.git
+    - git checkout $CI_COMMIT_REF_NAME
+    - |
+      if [ "$CI_COMMIT_SHA" != "$(git rev-parse HEAD)" ]; then
+        echo "Commit hashes do not match!"
+        echo "THIS_REPO:COMMIT_HASH: $CI_COMMIT_SHA"
+        echo "GITHUB:COMMIT_HASH: $(git rev-parse HEAD)"
+        exit 1
+      else
+        echo "Commit hashes match. Repository has been mirrored from source to target."
+      fi

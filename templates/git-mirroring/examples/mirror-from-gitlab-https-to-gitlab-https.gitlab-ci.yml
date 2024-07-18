@@ -1,0 +1,17 @@
+# Example job mirroring changes from a gitlab repository using the https protocol
+# to another gitlab repository also using the https protocol. The source repository
+# is public and does not require authentication to clone. The target repository
+# is authenticated with an HTTP password, in this case a Gitlab token. This token
+# is stored in GitLab as a masked CI/CD variable.
+
+# Uncomment the code below to import the template
+#include:
+#  - component: $CI_SERVER_FQDN/matt.pakulski/git-mirroring@latest
+
+gitlab-https-to-gitlab-https:
+  extends: .git-mirror
+
+  variables:  
+    SOURCE_REPO_URL: https://$CI_SERVER_FQDN/$CI_PROJECT_NAMESPACE/gitlab-clone-testing/mirror-from-gitlab-https-to-gitlab-https/source.git
+    TARGET_REPO_URL: https://$CI_SERVER_FQDN/$CI_PROJECT_NAMESPACE/gitlab-clone-testing/mirror-from-gitlab-https-to-gitlab-https/target.git
+    TARGET_HTTP_PASSWORD: $GITLAB_TARGET_REPO_TOKEN # defined in gitlab ui
