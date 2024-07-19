@@ -96,7 +96,7 @@ spec:
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
           local ssh_key_file
-          local ssh_known_hosts_file
+          local ssh_known_hosts_file=$SSH_KNOWN_HOSTS_FILE
           if [[ $prefix == SOURCE ]]; then
             ssh_key_file=$SOURCE_SSH_KEY_FILE
             ssh_known_hosts_file=$SOURCE_SSH_KNOWN_HOSTS_FILE
