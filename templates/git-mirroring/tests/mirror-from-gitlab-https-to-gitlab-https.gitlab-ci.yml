@@ -6,8 +6,8 @@
 
 
 .default_variables:gitlab-https-to-gitlab-https: &default_variables
-  SOURCE_REPO_URL: https://$CI_SERVER_FQDN/$CI_PROJECT_NAMESPACE/gitlab-clone-testing/mirror-from-gitlab-https-to-gitlab-https/source.git
-  TARGET_REPO_URL: https://$CI_SERVER_FQDN/$CI_PROJECT_NAMESPACE/gitlab-clone-testing/mirror-from-gitlab-https-to-gitlab-https/target.git
+  SOURCE_REPO_URL: https://gitlab.com/matt.pakulski/gitlab-clone-testing/mirror-from-gitlab-https-to-gitlab-https/source.git
+  TARGET_REPO_URL: https://gitlab.com/matt.pakulski/gitlab-clone-testing/mirror-from-gitlab-https-to-gitlab-https/target.git
 
 
 push-commit:gitlab-https-to-gitlab-https:
