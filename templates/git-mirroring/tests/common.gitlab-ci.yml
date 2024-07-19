@@ -8,10 +8,9 @@ include:
 
   variables:
     GIT_STRATEGY: none
-    SOURCE_REPO_URL: $CI_REPOSITORY_URL
-    TARGET_REPO_URL: https://github.com/matt-pakulski/gitlab-templates.git
-
     SOURCE_REPO_URL: $CLONE_REPO_URL
+    SOURCE_SSH_KEY_FILE: $CLONE_SSH_KEY_FILE
+    SOURCE_HTTP_PASSWORD: $CLONE_HTTP_PASSWORD
 
   before_script:
     - !reference [.git-mirroring:tests:snippets, print env variables]

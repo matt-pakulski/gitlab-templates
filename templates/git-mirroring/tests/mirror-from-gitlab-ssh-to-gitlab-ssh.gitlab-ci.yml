@@ -1,0 +1,48 @@
+# Tests mirroring from one gitlab repo to another gitlab repo using ssh
+#
+# Job 'push-commit:gitlab-ssh-to-gitlab-ssh' clones the source repo, creates a commit to it, and pushes the repo
+# Job 'gitlab-ssh-to-gitlab-ssh' performs the clone from the source repo to the target repo (located in examples/ directory)
+# Job 'verify:gitlab-ssh-to-gitlab-ssh' verifies that the commit that was added to the source repo is present in the target repo
+
+push-commit:gitlab-ssh-to-gitlab-ssh:
+  extends: .clone-repo
+  stage: build
+
+  variables:
+    CLONE_REPO_URL: git@gitlab.com:matt.pakulski/gitlab-clone-testing/mirror-from-gitlab-ssh-to-gitlab-ssh/source.git
+    CLONE_SSH_KEY_FILE: $MY_GITLAB_SOURCE_SSH_KEY_FILE # defined in gitlab ui
+  
+  script:
+    - cd cloned_repo.git
+    - !reference [.git-mirroring:tests:snippets, configure git commit user]
+    - !reference [.git-mirroring:tests:snippets, create a commit]
+    - git push
+    - echo "COMMIT_HASH=$(git rev-parse HEAD)" > ${CI_PROJECT_DIR}/.env
+  
+  artifacts:
+    reports:
+      dotenv: .env
+
+
+verify:gitlab-ssh-to-gitlab-ssh:
+  extends: .clone-repo
+  stage: test
+  needs: 
+    - push-commit:gitlab-ssh-to-gitlab-ssh
+    - gitlab-ssh-to-gitlab-ssh
+
+  variables:
+    CLONE_REPO_URL: git@gitlab.com:matt.pakulski/gitlab-clone-testing/mirror-from-gitlab-ssh-to-gitlab-ssh/target.git
+    CLONE_SSH_KEY_FILE: $MY_GITLAB_TARGET_SSH_KEY_FILE # defined in gitlab ui
+
+  script:
+    - cd cloned_repo.git
+    - |
+      if [ "$COMMIT_HASH" != "$(git rev-parse HEAD)" ]; then
+        echo "Commit hashes do not match!"
+        echo ".env:COMMIT_HASH: $COMMIT_HASH"
+        echo "HEAD:COMMIT_HASH: $(git rev-parse HEAD)"
+        exit 1
+      else
+        echo "Commit hashes match. Repository has been mirrored from source to target."
+      fi

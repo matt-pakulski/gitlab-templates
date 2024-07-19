@@ -12,6 +12,6 @@ gitlab-https-to-gitlab-https:
   extends: .git-mirror
 
   variables:  
-    SOURCE_REPO_URL: https://$CI_SERVER_FQDN/$CI_PROJECT_NAMESPACE/gitlab-clone-testing/mirror-from-gitlab-https-to-gitlab-https/source.git
-    TARGET_REPO_URL: https://$CI_SERVER_FQDN/$CI_PROJECT_NAMESPACE/gitlab-clone-testing/mirror-from-gitlab-https-to-gitlab-https/target.git
+    SOURCE_REPO_URL: https://gitlab.com/matt.pakulski/gitlab-clone-testing/mirror-from-gitlab-https-to-gitlab-https/source.git
+    TARGET_REPO_URL: https://gitlab.com/matt.pakulski/gitlab-clone-testing/mirror-from-gitlab-https-to-gitlab-https/target.git
     TARGET_HTTP_PASSWORD: $GITLAB_TARGET_REPO_TOKEN # defined in gitlab ui

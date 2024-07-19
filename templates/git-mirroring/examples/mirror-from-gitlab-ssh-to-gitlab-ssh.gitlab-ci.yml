@@ -1,0 +1,17 @@
+# Example job mirroring changes from a gitlab repository using the ssh protocol
+# to another gitlab repository also using the ssh protocol. The source repository
+# is public and does not require authentication to clone. The target repository
+# is authenticated with an ssh key. This ssh key is stored in GitLab as a file.
+
+# Uncomment the code below to import the template
+#include:
+#  - component: $CI_SERVER_FQDN/matt.pakulski/git-mirroring@latest
+
+gitlab-ssh-to-gitlab-ssh:
+  extends: .git-mirror
+
+  variables: 
+    SOURCE_REPO_URL: git@gitlab.com:matt.pakulski/gitlab-clone-testing/mirror-from-gitlab-ssh-to-gitlab-ssh/source.git
+    SOURCE_SSH_KEY_FILE: $MY_GITLAB_SOURCE_SSH_KEY_FILE # defined in gitlab ui
+    TARGET_REPO_URL: git@gitlab.com:matt.pakulski/gitlab-clone-testing/mirror-from-gitlab-ssh-to-gitlab-ssh/target.git
+    TARGET_SSH_KEY_FILE: $MY_GITLAB_TARGET_SSH_KEY_FILE # defined in gitlab ui

@@ -5,18 +5,12 @@
 # Job 'verify:gitlab-https-to-gitlab-https' verifies that the commit that was added to the source repo is present in the target repo
 
 
-.default_variables:gitlab-https-to-gitlab-https: &default_variables
-  SOURCE_REPO_URL: https://gitlab.com/matt.pakulski/gitlab-clone-testing/mirror-from-gitlab-https-to-gitlab-https/source.git
-  TARGET_REPO_URL: https://gitlab.com/matt.pakulski/gitlab-clone-testing/mirror-from-gitlab-https-to-gitlab-https/target.git
-
-
 push-commit:gitlab-https-to-gitlab-https:
   extends: .clone-repo
   stage: build
 
   variables:
-    <<: *default_variables
-    CLONE_REPO_URL: $SOURCE_REPO_URL
+    CLONE_REPO_URL: https://gitlab.com/matt.pakulski/gitlab-clone-testing/mirror-from-gitlab-https-to-gitlab-https/source.git
     SOURCE_HTTP_USERNAME: git
     SOURCE_HTTP_PASSWORD: $GITLAB_TARGET_REPO_TOKEN # defined in gitlab ui
   
@@ -40,8 +34,7 @@ verify:gitlab-https-to-gitlab-https:
     - gitlab-https-to-gitlab-https
 
   variables:
-    <<: *default_variables
-    CLONE_REPO_URL: $TARGET_REPO_URL
+    CLONE_REPO_URL: https://gitlab.com/matt.pakulski/gitlab-clone-testing/mirror-from-gitlab-https-to-gitlab-https/target.git
 
   script:
     - cd cloned_repo.git

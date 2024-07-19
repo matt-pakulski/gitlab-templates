@@ -10,7 +10,7 @@ Some example scenarios:
 
 ## Getting Started
 
-Import and configure the GitLab template into your GitLab CI/CD enabled git repository.
+Import and configure the template into your GitLab CI/CD enabled git repository.
 
 ```yaml
 include:
@@ -18,6 +18,11 @@ include:
 
 my-mirroring-job:
   extends: .git-mirror
+
+  variables:
+    SOURCE_REPO_URL: $CI_REPOSITORY_URL
+    TARGET_REPO_URL: https://github.com/matt-pakulski/gitlab-templates.git
+    TARGET_HTTP_PASSWORD: $GITHUB_PAT # defined in gitlab ui
 ```
 
 ## Environment Variables
