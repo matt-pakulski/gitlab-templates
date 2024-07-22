@@ -106,6 +106,7 @@ spec:
           fi
           if [[ -n $ssh_key_file ]]; then
             if [[ -f $ssh_key_file ]]; then
+              eval "$(ssh-agent -s)"
               echo ssh-add $ssh_key_file
               ssh-add $ssh_key_file
             else
