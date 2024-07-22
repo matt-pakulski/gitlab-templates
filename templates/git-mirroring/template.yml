@@ -108,6 +108,7 @@ spec:
             if [[ -f $ssh_key_file ]]; then
               eval "$(ssh-agent -s)"
               echo ssh-add $ssh_key_file
+              chmod 600 $ssh_key_file
               ssh-add $ssh_key_file
             else
               echo "Warning: SSH key file $ssh_key_file does not exist."
