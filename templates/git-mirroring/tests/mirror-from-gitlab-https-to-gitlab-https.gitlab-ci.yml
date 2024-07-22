@@ -12,7 +12,7 @@ push-commit:gitlab-https-to-gitlab-https:
   variables:
     CLONE_REPO_URL: https://gitlab.com/matt.pakulski/gitlab-clone-testing/mirror-from-gitlab-https-to-gitlab-https/source.git
     SOURCE_HTTP_USERNAME: git
-    SOURCE_HTTP_PASSWORD: $GITLAB_TARGET_REPO_TOKEN # defined in gitlab ui
+    SOURCE_HTTP_PASSWORD: $MY_GITLAB_TARGET_REPO_TOKEN # defined in gitlab ui
   
   script:
     - cd cloned_repo.git
