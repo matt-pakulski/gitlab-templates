@@ -1,0 +1,47 @@
+# Tests mirroring from one bitbucket repo via ssh to another bitbucket repo via https
+#
+# Job 'push-commit:bitbucket-ssh-to-bitbucket-https' clones the source repo, creates a commit to it, and pushes the repo
+# Job 'bitbucket-ssh-to-bitbucket-https' performs the clone from the source repo to the target repo (located in examples/ directory)
+# Job 'verify:bitbucket-ssh-to-bitbucket-https' verifies that the commit that was added to the source repo is present in the target repo
+
+push-commit:bitbucket-ssh-to-bitbucket-https:
+  extends: .clone-repo
+  stage: build
+
+  variables:
+    CLONE_REPO_URL: git@bitbucket.org:matt-pakulski/mirror-from-bitbucket-ssh-to-bitbucket-https-source.git
+    CLONE_SSH_KEY_FILE: $MY_BITBUCKET_SOURCE_SSH_KEY_FILE # defined in gitlab ui
+  
+  script:
+    - cd cloned_repo.git
+    - !reference [.git-mirroring:tests:snippets, configure git commit user]
+    - !reference [.git-mirroring:tests:snippets, create a commit]
+    - git push
+    - echo "COMMIT_HASH=$(git rev-parse HEAD)" > ${CI_PROJECT_DIR}/.env
+  
+  artifacts:
+    reports:
+      dotenv: .env
+
+
+verify:bitbucket-ssh-to-bitbucket-https:
+  extends: .clone-repo
+  stage: test
+  needs: 
+    - push-commit:bitbucket-ssh-to-bitbucket-https
+    - bitbucket-ssh-to-bitbucket-https
+
+  variables:
+    CLONE_REPO_URL: https://matt-pakulski-admin@bitbucket.org/matt-pakulski/mirror-from-bitbucket-ssh-to-bitbucket-https-target.git
+
+  script:
+    - cd cloned_repo.git
+    - |
+      if [ "$COMMIT_HASH" != "$(git rev-parse HEAD)" ]; then
+        echo "Commit hashes do not match!"
+        echo ".env:COMMIT_HASH: $COMMIT_HASH"
+        echo "HEAD:COMMIT_HASH: $(git rev-parse HEAD)"
+        exit 1
+      else
+        echo "Commit hashes match. Repository has been mirrored from source to target."
+      fi

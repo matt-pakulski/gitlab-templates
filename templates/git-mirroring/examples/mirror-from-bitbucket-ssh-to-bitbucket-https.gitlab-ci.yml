@@ -1,0 +1,17 @@
+# Example job mirroring changes from a gitlab repository using the ssh protocol
+# to another gitlab repository also using the ssh protocol. The source repository
+# is public and does not require authentication to clone. The target repository
+# is authenticated with an ssh key. This ssh key is stored in GitLab as a file.
+
+# Uncomment the code below to import the template
+#include:
+#  - component: $CI_SERVER_FQDN/matt.pakulski/git-mirroring@latest
+
+bitbucket-ssh-to-bitbucket-https:
+  extends: .git-mirror
+
+  variables: 
+    SOURCE_REPO_URL: git@bitbucket.org:matt-pakulski/mirror-from-bitbucket-ssh-to-bitbucket-https-source.git
+    SOURCE_SSH_KEY_FILE: $MY_BITBUCKET_SOURCE_SSH_KEY_FILE # defined in gitlab ui
+    TARGET_REPO_URL: https://matt-pakulski-admin@bitbucket.org/matt-pakulski/mirror-from-bitbucket-ssh-to-bitbucket-https-target.git
+    TARGET_HTTP_PASSWORD: $MY_BITBUCKET_TARGET_REPO_TOKEN # defined in gitlab ui
