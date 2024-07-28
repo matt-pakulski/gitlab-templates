@@ -13,5 +13,6 @@ bitbucket-ssh-to-bitbucket-https:
   variables: 
     SOURCE_REPO_URL: git@bitbucket.org:matt-pakulski/mirror-from-bitbucket-ssh-to-bitbucket-https-source.git
     SOURCE_SSH_KEY_FILE: $MY_BITBUCKET_SOURCE_SSH_KEY_FILE # defined in gitlab ui
-    TARGET_REPO_URL: https://matt-pakulski-admin@bitbucket.org/matt-pakulski/mirror-from-bitbucket-ssh-to-bitbucket-https-target.git
+    TARGET_HTTP_USERNAME: matt-pakulski-admin
+    TARGET_REPO_URL: https://bitbucket.org/matt-pakulski/mirror-from-bitbucket-ssh-to-bitbucket-https-target.git
     TARGET_HTTP_PASSWORD: $MY_BITBUCKET_TARGET_REPO_TOKEN # defined in gitlab ui
