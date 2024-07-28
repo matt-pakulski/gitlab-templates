@@ -109,7 +109,7 @@ spec:
               eval "$(ssh-agent -s)"
               echo ssh-add $ssh_key_file
               chmod 600 $ssh_key_file
-              ssh-add $ssh_key_file
+              ssh-add $ssh_key_file || (echo "failed to load key" && sleep 600)
             else
               echo "Warning: SSH key file $ssh_key_file does not exist."
             fi
